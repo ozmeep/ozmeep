@@ -193,6 +193,41 @@ body {
   font-size: clamp(1.25rem, 2.4vw, 1.8rem);
 }
 
+.gallery-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.control-button {
+  border: 0;
+  border-radius: var(--radius-pill);
+  padding: 10px 16px;
+  color: #f8fafc;
+  background: linear-gradient(135deg, #334155, #1e293b);
+  box-shadow: var(--shadow);
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 180ms ease, filter 180ms ease, opacity 180ms ease;
+}
+
+.control-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.control-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.control-button.is-active {
+  background: linear-gradient(135deg, #22d3ee, #3b82f6);
+}
+
 .gifs-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -218,6 +253,104 @@ body {
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
+  cursor: zoom-in;
+}
+
+.gif-meta {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  background: rgba(2, 6, 23, 0.75);
+  color: #cbd5e1;
+}
+
+.gif-item {
+  position: relative;
+}
+
+.gif-select {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  accent-color: #22d3ee;
+  display: none;
+}
+
+.gifs-grid.select-mode .gif-select {
+  display: block;
+}
+
+.gif-item.is-selected {
+  border-color: rgba(34, 211, 238, 0.8);
+}
+
+.gif-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: none;
+}
+
+.gif-modal.is-open {
+  display: block;
+}
+
+.gif-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.78);
+  backdrop-filter: blur(3px);
+}
+
+.gif-modal-content {
+  position: relative;
+  width: min(720px, 94vw);
+  max-height: 88vh;
+  margin: 4vh auto 0;
+  background: #0b1220;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+
+.gif-modal-content img {
+  width: 100%;
+  max-height: 66vh;
+  object-fit: contain;
+  border-radius: 14px;
+  background: #030712;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 0;
+  color: #f8fafc;
+  background: rgba(15, 23, 42, 0.92);
+  cursor: pointer;
+}
+
+.modal-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+#modalGifId {
+  font-size: 0.9rem;
+  color: #cbd5e1;
 }
 
 a:focus-visible {
@@ -247,5 +380,25 @@ a:focus-visible {
 
   .gifs-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gallery-controls {
+    position: sticky;
+    bottom: 10px;
+    z-index: 8;
+    background: rgba(2, 6, 23, 0.76);
+    padding: 8px;
+    border-radius: 14px;
+    backdrop-filter: blur(8px);
+  }
+
+  .control-button {
+    padding: 9px 13px;
+    font-size: 0.92rem;
+  }
+
+  .gif-modal-content {
+    margin-top: 2.5vh;
+    padding: 12px;
   }
 }

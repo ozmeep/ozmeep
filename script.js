@@ -30,6 +30,14 @@ const stickerPacks = [
 
 const packsGrid = document.querySelector("#packsGrid");
 const gifsGallery = document.querySelector("#gifsGallery");
+const toggleSelectModeBtn = document.querySelector("#toggleSelectMode");
+const downloadSelectedBtn = document.querySelector("#downloadSelected");
+const downloadAllBtn = document.querySelector("#downloadAll");
+const gifModal = document.querySelector("#gifModal");
+const closeGifModalBtn = document.querySelector("#closeGifModal");
+const modalGifImage = document.querySelector("#modalGifImage");
+const modalGifId = document.querySelector("#modalGifId");
+const modalDownloadBtn = document.querySelector("#modalDownloadBtn");
 
 // כל ה-GIFים שלך לגלריה.
 // אפשר להוסיף/להסיר לינקים כאן בעתיד.
@@ -265,6 +273,82 @@ const gifUrls = [
   "https://i.giphy.com/media/J7OnnpTfgTYprjp74Y/giphy.gif",
 ];
 
+let isSelectMode = false;
+const selectedGifs = new Set();
+let activeModalUrl = "";
+
+function getGifIdFromUrl(url) {
+  const match = url.match(/\/media\/([^/]+)\/giphy\.gif/i);
+  return match ? match[1] : "unknown";
+}
+
+function buildGifFilename(url, index) {
+  return `ozmep-gif-${index + 1}-${getGifIdFromUrl(url)}.gif`;
+}
+
+function triggerDownload(url, filename) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.rel = "noopener";
+  link.target = "_blank";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+function downloadMany(urls) {
+  urls.forEach((url, index) => {
+    setTimeout(() => {
+      triggerDownload(url, buildGifFilename(url, index));
+    }, index * 120);
+  });
+}
+
+function updateSelectionUi() {
+  const count = selectedGifs.size;
+  downloadSelectedBtn.disabled = count === 0;
+  downloadSelectedBtn.textContent = `הורד נבחרים (${count})`;
+}
+
+function setSelectMode(nextState) {
+  isSelectMode = nextState;
+  gifsGallery.classList.toggle("select-mode", isSelectMode);
+  toggleSelectModeBtn.classList.toggle("is-active", isSelectMode);
+  toggleSelectModeBtn.textContent = isSelectMode ? "סיום בחירה" : "בחירה מרובה";
+
+  if (!isSelectMode) {
+    selectedGifs.clear();
+    gifsGallery
+      .querySelectorAll(".gif-item.is-selected")
+      .forEach((item) => item.classList.remove("is-selected"));
+    gifsGallery
+      .querySelectorAll(".gif-select")
+      .forEach((checkbox) => (checkbox.checked = false));
+  }
+
+  updateSelectionUi();
+}
+
+function openGifModal(url) {
+  activeModalUrl = url;
+  const gifId = getGifIdFromUrl(url);
+  modalGifImage.src = url;
+  modalGifImage.alt = `GIF מוגדל ${gifId}`;
+  modalGifId.textContent = `GIF ID: ${gifId}`;
+  gifModal.classList.add("is-open");
+  gifModal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+}
+
+function closeGifModal() {
+  gifModal.classList.remove("is-open");
+  gifModal.setAttribute("aria-hidden", "true");
+  modalGifImage.src = "";
+  activeModalUrl = "";
+  document.body.style.overflow = "";
+}
+
 function createPackCard(pack) {
   const card = document.createElement("article");
   card.className = "pack-card";
@@ -298,15 +382,44 @@ function renderGifGallery() {
   gifUrls.forEach((url, index) => {
     const card = document.createElement("article");
     card.className = "gif-item";
+    card.dataset.url = url;
+    card.dataset.index = String(index);
+
+    const gifId = getGifIdFromUrl(url);
 
     card.innerHTML = `
+      <input class="gif-select" type="checkbox" aria-label="בחירה של GIF ${index + 1}" />
       <img
         src="${url}"
         alt="GIF מספר ${index + 1}"
         loading="lazy"
         decoding="async"
       />
+      <span class="gif-meta">#${gifId}</span>
     `;
+
+    const checkbox = card.querySelector(".gif-select");
+    const image = card.querySelector("img");
+
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        selectedGifs.add(url);
+        card.classList.add("is-selected");
+      } else {
+        selectedGifs.delete(url);
+        card.classList.remove("is-selected");
+      }
+      updateSelectionUi();
+    });
+
+    image.addEventListener("click", () => {
+      if (isSelectMode) {
+        checkbox.checked = !checkbox.checked;
+        checkbox.dispatchEvent(new Event("change"));
+        return;
+      }
+      openGifModal(url);
+    });
 
     fragment.appendChild(card);
   });
@@ -314,5 +427,38 @@ function renderGifGallery() {
   gifsGallery.appendChild(fragment);
 }
 
+toggleSelectModeBtn.addEventListener("click", () => {
+  setSelectMode(!isSelectMode);
+});
+
+downloadSelectedBtn.addEventListener("click", () => {
+  if (selectedGifs.size === 0) return;
+  downloadMany([...selectedGifs]);
+});
+
+downloadAllBtn.addEventListener("click", () => {
+  downloadMany(gifUrls);
+});
+
+modalDownloadBtn.addEventListener("click", () => {
+  if (!activeModalUrl) return;
+  triggerDownload(activeModalUrl, `ozmep-gif-${getGifIdFromUrl(activeModalUrl)}.gif`);
+});
+
+closeGifModalBtn.addEventListener("click", closeGifModal);
+gifModal.addEventListener("click", (event) => {
+  const target = event.target;
+  if (target instanceof HTMLElement && target.dataset.closeModal === "true") {
+    closeGifModal();
+  }
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && gifModal.classList.contains("is-open")) {
+    closeGifModal();
+  }
+});
+
 renderPacks();
 renderGifGallery();
+updateSelectionUi();

@@ -59,9 +59,34 @@
 
       <section class="gallery-section" aria-label="גלריית כל הגיפים">
         <h3 class="gallery-title">כל הגיפים שלי</h3>
+        <div class="gallery-controls" aria-label="פעולות גלריה">
+          <button id="toggleSelectMode" class="control-button" type="button">
+            בחירה מרובה
+          </button>
+          <button id="downloadSelected" class="control-button" type="button" disabled>
+            הורד נבחרים (0)
+          </button>
+          <button id="downloadAll" class="control-button" type="button">
+            הורד הכל
+          </button>
+        </div>
         <div id="gifsGallery" class="gifs-grid"></div>
       </section>
     </main>
+
+    <div id="gifModal" class="gif-modal" aria-hidden="true">
+      <div class="gif-modal-backdrop" data-close-modal="true"></div>
+      <div class="gif-modal-content" role="dialog" aria-modal="true" aria-label="תצוגת GIF מוגדלת">
+        <button id="closeGifModal" class="modal-close" type="button" aria-label="סגירה">
+          ✕
+        </button>
+        <img id="modalGifImage" src="" alt="" />
+        <div class="modal-meta">
+          <span id="modalGifId"></span>
+          <button id="modalDownloadBtn" class="control-button" type="button">הורד GIF</button>
+        </div>
+      </div>
+    </div>
 
     <script src="./script.js"></script>
   </body>
