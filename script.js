@@ -12,7 +12,7 @@ const stickerPacks = [
     preview: "https://i.giphy.com/media/8S52zjRY174Aeia9UX/giphy.gif",
     // כרגע מצביע לקובץ שנוצר אצלך במחשב. אם מעלים את האתר לרשת, עדכן ללינק ציבורי/יחסי.
     downloadUrl:
-      "file:///Users/ozshamir/Downloads/sticker-convert-macos-x86_64/sticker-convert.app/Contents/MacOS/stickers_output/%D7%94%D7%92%D7%99%D7%A4%D7%99%D7%9D.wastickers",
+      "https://drive.google.com/uc?export=download&id=1ZOOxJRCdV-K2883zNTKgDN16H5dFg4_2",
   },
   {
     title: "חבילה 1",
@@ -284,14 +284,14 @@ const gifUrls = [
 let isSelectMode = false;
 const selectedGifs = new Set();
 let activeModalUrl = "";
+let activeModalIndex = -1;
 
-function getGifIdFromUrl(url) {
-  const match = url.match(/\/media\/([^/]+)\/giphy\.gif/i);
-  return match ? match[1] : "unknown";
+function getGifHashtag(index) {
+  return `#gif${index + 1}`;
 }
 
-function buildGifFilename(url, index) {
-  return `ozmep-gif-${index + 1}-${getGifIdFromUrl(url)}.gif`;
+function buildGifFilename(index) {
+  return `ozmep-gif-${index + 1}.gif`;
 }
 
 function triggerDownload(url, filename) {
@@ -308,7 +308,7 @@ function triggerDownload(url, filename) {
 function downloadMany(urls) {
   urls.forEach((url, index) => {
     setTimeout(() => {
-      triggerDownload(url, buildGifFilename(url, index));
+      triggerDownload(url, buildGifFilename(index));
     }, index * 120);
   });
 }
@@ -338,12 +338,12 @@ function setSelectMode(nextState) {
   updateSelectionUi();
 }
 
-function openGifModal(url) {
+function openGifModal(url, index) {
   activeModalUrl = url;
-  const gifId = getGifIdFromUrl(url);
+  activeModalIndex = index;
   modalGifImage.src = url;
-  modalGifImage.alt = `GIF מוגדל ${gifId}`;
-  modalGifId.textContent = `GIF ID: ${gifId}`;
+  modalGifImage.alt = `GIF מוגדל ${index + 1}`;
+  modalGifId.textContent = getGifHashtag(index);
   gifModal.classList.add("is-open");
   gifModal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
@@ -354,6 +354,7 @@ function closeGifModal() {
   gifModal.setAttribute("aria-hidden", "true");
   modalGifImage.src = "";
   activeModalUrl = "";
+  activeModalIndex = -1;
   document.body.style.overflow = "";
 }
 
@@ -393,8 +394,6 @@ function renderGifGallery() {
     card.dataset.url = url;
     card.dataset.index = String(index);
 
-    const gifId = getGifIdFromUrl(url);
-
     card.innerHTML = `
       <input class="gif-select" type="checkbox" aria-label="בחירה של GIF ${index + 1}" />
       <img
@@ -403,7 +402,7 @@ function renderGifGallery() {
         loading="lazy"
         decoding="async"
       />
-      <span class="gif-meta">#${gifId}</span>
+      <span class="gif-meta">${getGifHashtag(index)}</span>
     `;
 
     const checkbox = card.querySelector(".gif-select");
@@ -426,7 +425,7 @@ function renderGifGallery() {
         checkbox.dispatchEvent(new Event("change"));
         return;
       }
-      openGifModal(url);
+      openGifModal(url, index);
     });
 
     fragment.appendChild(card);
@@ -450,7 +449,8 @@ downloadAllBtn.addEventListener("click", () => {
 
 modalDownloadBtn.addEventListener("click", () => {
   if (!activeModalUrl) return;
-  triggerDownload(activeModalUrl, `ozmep-gif-${getGifIdFromUrl(activeModalUrl)}.gif`);
+  const index = activeModalIndex >= 0 ? activeModalIndex : 0;
+  triggerDownload(activeModalUrl, buildGifFilename(index));
 });
 
 closeGifModalBtn.addEventListener("click", closeGifModal);
