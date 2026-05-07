@@ -64,6 +64,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 12px;
+  font-family: "Rubik", system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: clamp(2rem, 6vw, 4rem);
   line-height: 1.05;
   margin: 0;
@@ -125,7 +126,8 @@ body {
 .packs-grid {
   display: grid;
   gap: 18px;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: minmax(180px, 240px);
+  justify-content: center;
 }
 
 .pack-card {
@@ -199,11 +201,7 @@ body {
 }
 
 .gallery-controls {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
+  display: none;
 }
 
 .control-button {
