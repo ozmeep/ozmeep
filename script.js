@@ -7,6 +7,14 @@
 // - downloadUrl: להחליף ללינק ההורדה האמיתי (כרגע "#")
 const stickerPacks = [
   {
+    title: "הגיפים",
+    // החלפה מומלצת: לשים קובץ preview בתוך הפרויקט (למשל ./stickers_output/giphy.webp)
+    preview: "https://i.giphy.com/media/8S52zjRY174Aeia9UX/giphy.gif",
+    // כרגע מצביע לקובץ שנוצר אצלך במחשב. אם מעלים את האתר לרשת, עדכן ללינק ציבורי/יחסי.
+    downloadUrl:
+      "file:///Users/ozshamir/Downloads/sticker-convert-macos-x86_64/sticker-convert.app/Contents/MacOS/stickers_output/%D7%94%D7%92%D7%99%D7%A4%D7%99%D7%9D.wastickers",
+  },
+  {
     title: "חבילה 1",
     preview: "https://placehold.co/600x600/111827/e2e8f0?text=Pack+1",
     downloadUrl: "#",
