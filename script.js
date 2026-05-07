@@ -7,32 +7,12 @@
 // - downloadUrl: להחליף ללינק ההורדה האמיתי (כרגע "#")
 const stickerPacks = [
   {
-    title: "הגיפים",
+    title: "הגיפים - מדבקות לווצאפ",
     // החלפה מומלצת: לשים קובץ preview בתוך הפרויקט (למשל ./stickers_output/giphy.webp)
     preview: "https://i.giphy.com/media/8S52zjRY174Aeia9UX/giphy.gif",
-    // כרגע מצביע לקובץ שנוצר אצלך במחשב. אם מעלים את האתר לרשת, עדכן ללינק ציבורי/יחסי.
+    // לינק ישיר להורדת קובץ החבילה מגוגל דרייב
     downloadUrl:
       "https://drive.google.com/uc?export=download&id=1ZOOxJRCdV-K2883zNTKgDN16H5dFg4_2",
-  },
-  {
-    title: "חבילה 1",
-    preview: "https://placehold.co/600x600/111827/e2e8f0?text=Pack+1",
-    downloadUrl: "#",
-  },
-  {
-    title: "חבילה 2",
-    preview: "https://placehold.co/600x600/1f2937/e2e8f0?text=Pack+2",
-    downloadUrl: "#",
-  },
-  {
-    title: "חבילה 3",
-    preview: "https://placehold.co/600x600/334155/e2e8f0?text=Pack+3",
-    downloadUrl: "#",
-  },
-  {
-    title: "חבילה 4",
-    preview: "https://placehold.co/600x600/0f172a/e2e8f0?text=Pack+4",
-    downloadUrl: "#",
   },
 ];
 
@@ -44,7 +24,6 @@ const downloadAllBtn = document.querySelector("#downloadAll");
 const gifModal = document.querySelector("#gifModal");
 const closeGifModalBtn = document.querySelector("#closeGifModal");
 const modalGifImage = document.querySelector("#modalGifImage");
-const modalGifId = document.querySelector("#modalGifId");
 const modalDownloadBtn = document.querySelector("#modalDownloadBtn");
 
 // כל ה-GIFים שלך לגלריה.
@@ -286,10 +265,6 @@ const selectedGifs = new Set();
 let activeModalUrl = "";
 let activeModalIndex = -1;
 
-function getGifHashtag(index) {
-  return `#gif${index + 1}`;
-}
-
 function buildGifFilename(index) {
   return `ozmep-gif-${index + 1}.gif`;
 }
@@ -343,7 +318,6 @@ function openGifModal(url, index) {
   activeModalIndex = index;
   modalGifImage.src = url;
   modalGifImage.alt = `GIF מוגדל ${index + 1}`;
-  modalGifId.textContent = getGifHashtag(index);
   gifModal.classList.add("is-open");
   gifModal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
@@ -402,7 +376,6 @@ function renderGifGallery() {
         loading="lazy"
         decoding="async"
       />
-      <span class="gif-meta">${getGifHashtag(index)}</span>
     `;
 
     const checkbox = card.querySelector(".gif-select");

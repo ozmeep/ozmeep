@@ -72,11 +72,22 @@ body {
 }
 
 .brand-title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   font-size: clamp(2.1rem, 4vw, 3.4rem);
   line-height: 1.05;
   margin: 0;
   font-weight: 800;
   letter-spacing: 0.4px;
+}
+
+.brand-logo {
+  width: clamp(38px, 4.5vw, 56px);
+  height: clamp(38px, 4.5vw, 56px);
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .instagram-link {
@@ -175,7 +186,6 @@ body {
   background: linear-gradient(135deg, var(--accent), #6366f1);
   color: #f8fafc;
   padding: 10px 14px;
-  box-shadow: 0 10px 24px rgba(99, 102, 241, 0.33);
 }
 
 .download-button:hover {
@@ -207,7 +217,6 @@ body {
   padding: 10px 16px;
   color: #f8fafc;
   background: linear-gradient(135deg, #334155, #1e293b);
-  box-shadow: var(--shadow);
   font-family: inherit;
   font-weight: 600;
   cursor: pointer;
@@ -254,17 +263,6 @@ body {
   aspect-ratio: 1 / 1;
   object-fit: cover;
   cursor: zoom-in;
-}
-
-.gif-meta {
-  position: absolute;
-  left: 8px;
-  bottom: 8px;
-  padding: 3px 7px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  background: rgba(2, 6, 23, 0.75);
-  color: #cbd5e1;
 }
 
 .gif-item {
@@ -343,14 +341,9 @@ body {
 .modal-meta {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 10px;
   margin-top: 12px;
-}
-
-#modalGifId {
-  font-size: 0.9rem;
-  color: #cbd5e1;
 }
 
 a:focus-visible {
