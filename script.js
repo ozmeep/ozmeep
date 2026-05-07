@@ -9,7 +9,7 @@ const stickerPacks = [
   {
     title: "הגיפים - מדבקות לווצאפ",
     // החלפה מומלצת: לשים קובץ preview בתוך הפרויקט (למשל ./stickers_output/giphy.webp)
-    preview: "https://i.giphy.com/media/8S52zjRY174Aeia9UX/giphy.gif",
+    preview: "https://i.giphy.com/media/jlRKcuFcvdq7L8fTex/giphy.gif",
     // לחיצה על כפתור החבילה מובילה לערוץ הוואטסאפ
     downloadUrl:
       "https://whatsapp.com/channel/0029Vb7WQbwHLHQTp2yvUG2B",
